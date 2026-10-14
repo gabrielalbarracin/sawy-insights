@@ -2,25 +2,25 @@
   "key": "7fd1dcb90a9879e2",
   "model": "gemini/gemini-3.5-flash-lite",
   "prompt_version": "2025-10-v1",
-  "generated_at": "2026-10-14T03:39:40+00:00",
+  "generated_at": "2026-10-14T04:11:08+00:00",
   "narrative": {
     "headline": "No estás ganando plata, en el período acumulaste una pérdida de [[kpi.net_result_total]].",
     "summary": [
-      "Ganas plata con canales como el online que te deja un buen margen despues de pagar la mercaderia y los gastos variables.",
-      "Perdes plata fuerte con clientes grandes como Granos del Sur porque el descuento y el flete que absorbes se comen todo el margen.",
-      "Facturas un poquito mas en pesos pero cada vez vendes menos kilos, y los meses negativos se repiten seguido."
+      "Ganas plata con canales como el online que te deja un margen interesante después de cubrir los gastos variables.",
+      "Perdés plata con operaciones grandes como las de Granos del Sur, donde el descuento alto y el flete a tu cargo se comen el resultado.",
+      "Mirá de cerca tus costos de flete y el volumen real que vendés en kilos para entender dónde se va la plata."
     ],
     "actions": [
       {
         "title": "Negociar las condiciones comerciales con Granos del Sur",
-        "why": "Este cliente representa un porcentaje enorme de tu facturacion pero te hace perder plata todos los meses. Con el descuento actual y sin cobrar el flete no cierra, asi que necesitas achicar el descuento o empezar a cobrarle el traslado para no perder [[F1.monthly_loss]] por mes.",
+        "why": "Este cliente te genera una pérdida mensual de [[F1.monthly_loss]] porque el descuento actual está por encima del límite de [[F1.breakeven_discount]] y además absorbes el flete. Conviene ajustar el precio en un [[F1.price_increase_needed]] o revisar la forma de entrega.",
         "finding_ids": [
           "F1"
         ]
       },
       {
-        "title": "Llamar a los clientes que estan comprando menos",
-        "why": "Hay varios clientes como El Almacen de Nunez, Coffee Lab Flores, Cafe Barracas y Cafe Parque Chas II que bajaron fuerte su ritmo de pedidos y estan dejando de comprarte una porcion importante de plata todos los meses. Conviene comunicarte con ellos esta semana para reactivarlos.",
+        "title": "Llamar a los clientes que redujeron sus compras",
+        "why": "Clientes como El Almacen de Nunez, Coffee Lab Flores, Cafe Barracas y Cafe Parque Chas II bajaron fuerte su ritmo de pedidos y arriesgan una facturación mensual importante. Un llamado esta semana puede reactivarlos.",
         "finding_ids": [
           "F5",
           "F7",
@@ -29,15 +29,15 @@
         ]
       },
       {
-        "title": "Revisar el tamano y la frecuencia de los envios de Brasil Cerrado",
-        "why": "Se esta devolviendo mucha mercaderia que se pone vieja en las cafeterias, lo que te genera un costo mensual importante en notas de credito.",
+        "title": "Revisar el tamaño y la frecuencia de los pedidos con devolución alta",
+        "why": "El producto Brasil Cerrado de un kilo tiene notas de crédito frecuentes porque se pone viejo en las cafeterías, generando un costo mensual de [[F6.returned_cost_monthly]].",
         "finding_ids": [
           "F6"
         ]
       },
       {
-        "title": "Ofrecer Etiopia Yirgacheffe a las cafeterias que no lo compran",
-        "why": "Es un producto que deja un margen muy superior al promedio del canal y hay muchos clientes actuales que todavia no te lo piden.",
+        "title": "Ofrecer Etiopia Yirgacheffe a las cafeterías que no lo compran",
+        "why": "Hay un grupo de dieciséis clientes en el canal que todavía no lo piden, y sumarlos puede dejarte una ganancia mensual extra de [[F11.potential_monthly]].",
         "finding_ids": [
           "F11"
         ]
@@ -47,22 +47,22 @@
       {
         "belief": "El Blend Casa es lo que más vendemos y lo que más nos deja.",
         "verdict": "en parte",
-        "explanation": "Es cierto que es lo que mas vendes porque abarca una porcion enorme de la facturacion, pero despues de gastos variables te deja muy poca ganancia en comparacion con otros productos como el Colombia Huila."
+        "explanation": "Es cierto que concentra la mayor parte de tu facturación, alcanzando el [[F10.top_share]], pero su margen después de gastos variables es de apenas [[F10.top_margin]], muy por debajo del promedio del negocio."
       },
       {
         "belief": "Granos del Sur nos pide precio pero mueve un volumen que nadie más mueve.",
-        "verdict": "se confirma",
-        "explanation": "Mueve un volumen muy alto que representa un tercio de tu facturacion, pero el precio al que le vendes con el descuento actual y el flete a tu cargo hace que termines perdiendo plata todos los meses."
+        "verdict": "no se confirma",
+        "explanation": "Si bien representa el [[F1.revenue_share]] de tus ventas, las condiciones actuales hacen que cada mes pierdas plata con ellos en lugar de generar ganancias."
       },
       {
         "belief": "El online es poquito, casi un hobby.",
         "verdict": "no se confirma",
-        "explanation": "No es un hobby sino tu canal mas fuerte, ya que despues de gastos variables es el que mejor margen te deja y ademas viene creciendo bastante."
+        "explanation": "Lejos de ser un hobby, este canal te deja un margen excelente del [[F4.margin_pct]] después de gastos variables y viene creciendo con fuerza."
       },
       {
         "belief": "Facturamos cada vez más y en la cuenta nunca hay nada.",
         "verdict": "se confirma",
-        "explanation": "La facturacion subio levemente en pesos debido a los aumentos de precios por la inflacion, pero en volumen real vendiste menos kilos y los costos, las devoluciones y los clientes que no cierran hacen que la plata no quede en la cuenta."
+        "explanation": "La facturación en pesos subió un [[F2.revenue_change]] por la inflación, pero el volumen real en kilos cayó un [[F2.volume_change]], lo que explica por qué el negocio sigue perdiendo plata."
       }
     ]
   }
