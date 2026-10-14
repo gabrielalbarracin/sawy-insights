@@ -178,7 +178,7 @@ footer { margin-top: 48px; color: var(--muted); font-size: 13px; display: flex; 
       <p class="eyebrow">Tablero de negocio</p>
       <h1>{{ client.name }}</h1>
     </div>
-    <div class="meta">{{ period }} · datos hasta el {{ reference_date }}<br>{{ source_label }}</div>
+    <div class="meta">{{ period }} · datos hasta el {{ reference_date }}</div>
   </header>
 
   <!-- 1. ¿Estás ganando plata? -->
@@ -306,22 +306,6 @@ footer { margin-top: 48px; color: var(--muted); font-size: 13px; display: flex; 
         {% if f.related %}<div class="chips">{% for e in f.related[:20] %}<span class="chip">{{ e }}</span>{% endfor %}</div>{% endif %}
       </article>
       {% endfor %}
-    </div>
-  </section>
-
-  <!-- 8. Cómo calculamos -->
-  <section aria-labelledby="h-how">
-    <h2 id="h-how">Cómo calculamos esto</h2>
-    <div class="grid g2">
-      <div class="card">
-        <h3>Supuestos</h3>
-        <ul class="plain">{% for a in assumptions %}<li>{{ a }}</li>{% endfor %}</ul>
-      </div>
-      <div class="card">
-        <h3>Qué encontramos en los datos</h3>
-        <ul class="plain">{% for n in notes %}<li>{{ n.message }}</li>{% endfor %}</ul>
-        {% if skipped %}<p class="note">Análisis que no aplican a estos datos: {% for s in skipped %}{{ s.detector }}{% if not loop.last %}, {% endif %}{% endfor %}.</p>{% endif %}
-      </div>
     </div>
   </section>
 

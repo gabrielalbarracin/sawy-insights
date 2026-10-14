@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -19,6 +19,9 @@ from sawy.report import charts
 from sawy.warehouse import Warehouse
 
 TEMPLATES = Path(__file__).parent / "templates"
+
+# Hora de Argentina (UTC-3, sin horario de verano). Offset fijo: no depende de tzdata en la imagen.
+AR_TZ = timezone(timedelta(hours=-3))
 
 DRIVER_LABELS = {
     "base_units": "por {unit}",
@@ -129,41 +132,6 @@ def charts_html(ctx: Context) -> dict:
     return {"monthly": monthly, "trend": trend, "by_method": by_method, "default_method": ctx.default_method}
 
 
-def assumptions(cfg: ClientConfig, ctx: Context) -> list[str]:
-    """'Cómo calculamos esto', generado desde la configuración (no hardcodeado)."""
-    unit = cfg.client.base_unit
-    names = ctx.product_names()
-    out = [
-        "Las ventas se cuentan netas de descuentos y de devoluciones (notas de crédito).",
-        "Cada venta usa el costo del mes en que se hizo: los costos suben mes a mes.",
-        "Se usan los precios de cada factura, no la lista de precios actual.",
-    ]
-    for old, new in cfg.rules.product_aliases.items():
-        out.append(f"El código viejo {old} se unificó con {names.get(new, new)}.")
-    packs = [f"{names.get(p, p)} = {f:g} {unit}" for p, f in cfg.rules.base_units_per_unit.items() if f > 1]
-    if packs:
-        out.append(f"Para medir volumen todo se pasa a {unit}: " + "; ".join(packs) + ".")
-    for e in cfg.rules.expenses:
-        if e.behavior == "variable":
-            label = (e.label or e.concept).capitalize()
-            line = (
-                f"{label} se reparte entre {', '.join(e.channels)} "
-                f"{DRIVER_EXPLAIN[e.driver].format(unit=unit)}"
-            )
-            if e.sensitive:
-                line += " (es un supuesto: abajo podés ver cómo cambia con otros criterios)"
-            out.append(line + ".")
-    fixed = [e.label or e.concept for e in cfg.rules.expenses if e.behavior == "fixed"]
-    if fixed:
-        out.append(
-            "Gastos fijos ("
-            + ", ".join(f.lower() for f in fixed)
-            + "): no se reparten entre canales; se restan al resultado total."
-        )
-    out.append("Las devoluciones no reciben flete: se asume que el reemplazo viaja en el próximo reparto.")
-    return out
-
-
 def build(
     cfg: ClientConfig,
     wh: Warehouse,
@@ -230,10 +198,8 @@ def build(
         narrative_note=narrative.note,
         source_label=source_label,
         findings=view_findings,
-        notes=[nn.model_dump() for nn in notes],
-        assumptions=assumptions(cfg, ctx),
         charts=charts_html(ctx),
-        generated_at=datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M UTC"),
+        generated_at=datetime.now(AR_TZ).strftime("%d/%m/%Y %H:%M") + " (hora Argentina)",
         default_method_label=_method_label(report.allocation_method, unit),
         skipped=[s.model_dump() for s in report.skipped],
     )
@@ -242,7 +208,11 @@ def build(
     out.write_text(html, encoding="utf-8")
     (cfg.output_dir / "insights.json").write_text(
         json.dumps(
-            {"report": report.model_dump(mode="json"), "narrative": narrative.model_dump(mode="json")},
+            {
+                "report": report.model_dump(mode="json"),
+                "narrative": narrative.model_dump(mode="json"),
+                "data_quality": [n.model_dump() for n in notes],
+            },
             ensure_ascii=False,
             indent=2,
         ),

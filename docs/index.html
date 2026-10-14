@@ -178,7 +178,7 @@ footer { margin-top: 48px; color: var(--muted); font-size: 13px; display: flex; 
       <p class="eyebrow">Tablero de negocio</p>
       <h1>Tostadero Ruta 9</h1>
     </div>
-    <div class="meta">Enero a junio 2025 · datos hasta el 28/06/2025<br>Textos redactados con IA (gemini/gemini-3.5-flash-lite)</div>
+    <div class="meta">Enero a junio 2025 · datos hasta el 28/06/2025</div>
   </header>
 
   <!-- 1. ¿Estás ganando plata? -->
@@ -498,24 +498,8 @@ footer { margin-top: 48px; color: var(--muted); font-size: 13px; display: flex; 
     </div>
   </section>
 
-  <!-- 8. Cómo calculamos -->
-  <section aria-labelledby="h-how">
-    <h2 id="h-how">Cómo calculamos esto</h2>
-    <div class="grid g2">
-      <div class="card">
-        <h3>Supuestos</h3>
-        <ul class="plain"><li>Las ventas se cuentan netas de descuentos y de devoluciones (notas de crédito).</li><li>Cada venta usa el costo del mes en que se hizo: los costos suben mes a mes.</li><li>Se usan los precios de cada factura, no la lista de precios actual.</li><li>El código viejo BLEND1K se unificó con Blend Casa 1 kg.</li><li>Para medir volumen todo se pasa a kg: Blend Casa CAJA X 6 (1kg c/u) = 6 kg.</li><li>El flete se reparte entre Distribuidor, Cafeterías según los kg que se llevó cada uno (es un supuesto: abajo podés ver cómo cambia con otros criterios).</li><li>El packaging se reparte entre Distribuidor, Cafeterías según los kg que se llevó cada uno.</li><li>La comisión de la tienda online se reparte entre Online según cuánta plata facturó cada uno.</li><li>Gastos fijos (alquiler y expensas local, sueldos produccion, sueldos administracion, energia y gas tostadero): no se reparten entre canales; se restan al resultado total.</li><li>Las devoluciones no reciben flete: se asume que el reemplazo viaja en el próximo reparto.</li></ul>
-      </div>
-      <div class="card">
-        <h3>Qué encontramos en los datos</h3>
-        <ul class="plain"><li>28 renglones usaban códigos viejos de producto (BLEND1K). Se unificaron con el código vigente para no perder esas ventas.</li><li>44 notas de crédito (devoluciones) se descuentan de las ventas.</li><li>El vendedor está vacío en 88% de los renglones: no se analiza por vendedor.</li><li>El sistema no asigna el flete a cada cliente. Lo repartimos con un criterio y mostramos cómo cambian los resultados con otros criterios.</li><li>3.573 renglones procesados. Todas las ventas tienen costo del mes correspondiente y el total coincide con lo exportado del sistema.</li></ul>
-        
-      </div>
-    </div>
-  </section>
-
   <footer>
-    <span>Generado el 14/10/2026 03:39 UTC · criterio de reparto por defecto: por kg</span>
+    <span>Generado el 14/10/2026 00:39 (hora Argentina) · criterio de reparto por defecto: por kg</span>
     <span>Textos redactados con IA (gemini/gemini-3.5-flash-lite)</span>
   </footer>
 </div>
