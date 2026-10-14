@@ -1,0 +1,28 @@
+version: 2
+
+# Los marts son la "API" del análisis: los detectores de hallazgos y el
+# dashboard solo leen de acá, nunca del core ni del landing.
+models:
+  - name: mart_pnl_monthly
+    description: Resultado mensual de la empresa (ventas, margen, gastos, resultado).
+    columns:
+      - name: period
+        data_tests: [unique, not_null]
+  - name: mart_contribution_by_channel
+    data_tests:
+      - unique_combination:
+          columns: ["allocation_method", "channel"]
+  - name: mart_contribution_by_product
+    data_tests:
+      - unique_combination:
+          columns: ["allocation_method", "product_id"]
+  - name: mart_contribution_by_channel_product
+  - name: mart_contribution_by_customer
+    data_tests:
+      - unique_combination:
+          columns: ["allocation_method", "customer_id"]
+  - name: mart_channel_monthly
+  - name: mart_variable_expenses_by_channel
+  - name: mart_customer_monthly
+  - name: mart_customer_product
+  - name: mart_returns

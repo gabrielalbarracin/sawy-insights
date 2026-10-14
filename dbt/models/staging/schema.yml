@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_sales_lines
+    columns:
+      - name: line_id
+        data_tests: [unique, not_null]
+      - name: document_type
+        data_tests:
+          - accepted_values:
+              values: ["invoice", "credit_note"]
+  - name: stg_products
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+  - name: stg_product_costs
+    data_tests:
+      - unique_combination:
+          columns: ["product_id", "period"]
+  - name: stg_expenses
+    data_tests:
+      - unique_combination:
+          columns: ["period", "concept"]

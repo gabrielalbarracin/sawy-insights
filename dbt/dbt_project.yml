@@ -1,0 +1,29 @@
+# Proyecto dbt GENÉRICO: no tiene nada específico de ningún cliente.
+# Lee el schema `landing` (modelo canónico + tablas de reglas que escribe la
+# ingesta a partir de client.yaml) y construye core + marts.
+name: sawy
+version: "1.0.0"
+config-version: 2
+profile: sawy
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+log-path: "target/logs"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  sawy:
+    staging:
+      +schema: staging
+      +materialized: view
+    core:
+      +schema: core
+      +materialized: table
+    marts:
+      +schema: marts
+      +materialized: table
+
+flags:
+  send_anonymous_usage_stats: false

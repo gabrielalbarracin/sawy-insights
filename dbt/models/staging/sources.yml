@@ -1,0 +1,32 @@
+version: 2
+
+sources:
+  - name: landing
+    description: >
+      Modelo canónico que escribe la ingesta (sawy/ingest). Ya viene tipado y
+      validado contra contratos; los nombres de columnas son los mismos para
+      cualquier cliente y cualquier ERP.
+    schema: landing
+    tables:
+      - name: sales_lines
+        description: Renglones de comprobantes. Convención — notas de crédito con cantidad e importe negativos.
+        columns:
+          - name: line_id
+            data_tests: [unique, not_null]
+      - name: products
+      - name: customers
+      - name: product_costs
+      - name: expenses
+      # Reglas de negocio del cliente (salen de client.yaml)
+      - name: rule_product_alias
+        description: Código viejo → código vigente.
+      - name: rule_product_units
+        description: Unidades base (kg, litros...) por unidad vendida.
+      - name: rule_channel
+        description: Segmento del ERP → canal de negocio.
+      - name: rule_expense
+        description: Comportamiento de cada gasto (fijo / variable) y su driver de reparto.
+      - name: rule_expense_scope
+        description: A qué canales se reparte cada gasto variable.
+      - name: cfg_allocation_methods
+        description: Criterios de reparto a calcular (sensibilidad).

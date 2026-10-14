@@ -1,0 +1,13 @@
+codigo;descripcion;unidad_medida;rubro;precio_lista_actual;activo
+CAF-BLEND-1K;Blend Casa 1 kg;UN;CAFE;20069;S
+CAF-BLEND-250;Blend Casa 250 g;UN;CAFE;6244;S
+CAF-BLEND-CJ6;Blend Casa CAJA X 6 (1kg c/u);CAJA X6;CAFE;113725;S
+CAF-BRAS-1K;Brasil Cerrado 1 kg;UN;CAFE;18954;S
+CAF-BRAS-250;Brasil Cerrado 250 g;UN;CAFE;5909;S
+CAF-ETIOP-250;Etiopia Yirgacheffe 250 g;UN;CAFE;10592;S
+CAF-COLOM-250;Colombia Huila 250 g;UN;CAFE;9143;S
+CAF-DESCA-250;Descafeinado 250 g;UN;CAFE;8251;S
+CAF-CAPS-10;Capsulas compatibles x10;UN;CAFE;7693;S
+CAP-FILTRO-100;Filtros de papel x 100;UN;ACCESORIOS;3568;S
+CAP-TAZA;Taza ceramica logo;UN;ACCESORIOS;9923;S
+BLEND1K;BLEND CASA 1KG;KG;CAFE;0;N

@@ -1,0 +1,8 @@
+sawy:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      # Un archivo por cliente; lo define el CLI (sawy build).
+      path: "{{ env_var('SAWY_DB_PATH') }}"
+      threads: 4

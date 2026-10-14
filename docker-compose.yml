@@ -1,0 +1,14 @@
+services:
+  sawy:
+    build: .
+    image: sawy-insights
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: .env
+        required: false   # sin .env funciona igual (sin IA o con la caché)
+    environment:
+      SAWY_CLIENT: ${SAWY_CLIENT:-tostadero_ruta9}
+    volumes:
+      - ./output:/app/output     # el dashboard generado queda en tu máquina
+      - ./clients:/app/clients   # la caché de IA se guarda junto al cliente

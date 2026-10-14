@@ -1,0 +1,44 @@
+codigo_cliente;razon_social;condicion_comercial;bonificacion_pct;cuit;localidad
+C0001;GRANOS DEL SUR S.A.;Distribuidor;40;30-71234567-9;Avellaneda
+C0100;Cafe Palermo;Mayorista;32;30-78863084-5;CABA
+C0101;El Almacen de Palermo II;Mayorista;35;30-71025531-5;CABA
+C0102;Bar Belgrano;Mayorista;35;30-75829302-8;CABA
+C0103;Coffee Lab Belgrano II;Mayorista;35;30-74205385-8;CABA
+C0104;Tostado Villa Crespo;Mayorista;35;30-75775959-0;CABA
+C0105;Panaderia Villa Crespo II;Mayorista;32;30-73734787-5;CABA
+C0106;El Almacen de Nunez;Mayorista;30;30-72771943-1;CABA
+C0107;La Ventanita de Nunez II;Mayorista;35;30-76817960-4;CABA
+C0108;Coffee Lab Colegiales;Mayorista;32;30-78463103-0;CABA
+C0109;Usina Colegiales II;Mayorista;32;30-72510043-3;CABA
+C0110;Panaderia Devoto;Mayorista;35;30-76425352-3;CABA
+C0111;Cafe Devoto II;Mayorista;35;30-77695184-2;CABA
+C0112;La Ventanita de Recoleta;Mayorista;35;30-73100570-4;CABA
+C0113;Bar Recoleta II;Mayorista;30;30-77355249-2;CABA
+C0114;Usina Boedo;Mayorista;32;30-78846171-8;CABA
+C0115;Tostado Boedo II;Mayorista;30;30-72650882-7;CABA
+C0116;Cafe Caballito;Mayorista;32;30-78583653-4;CABA
+C0117;El Almacen de Caballito II;Mayorista;32;30-72095173-4;CABA
+C0118;Bar Saavedra;Mayorista;32;30-79884251-1;CABA
+C0119;Coffee Lab Saavedra II;Mayorista;35;30-71531025-0;CABA
+C0120;Tostado Chacarita;Mayorista;32;30-72067953-9;CABA
+C0121;Panaderia Chacarita II;Mayorista;35;30-71220487-4;CABA
+C0122;El Almacen de Almagro;Mayorista;32;30-75651420-5;CABA
+C0123;La Ventanita de Almagro II;Mayorista;35;30-79983078-4;CABA
+C0124;Coffee Lab Flores;Mayorista;35;30-73613139-8;CABA
+C0125;Usina Flores II;Mayorista;32;30-73437667-0;CABA
+C0126;Panaderia Parque Chas;Mayorista;32;30-75092412-4;CABA
+C0127;Cafe Parque Chas II;Mayorista;32;30-77960273-5;CABA
+C0128;La Ventanita de San Telmo;Mayorista;32;30-78869757-7;CABA
+C0129;Bar San Telmo II;Mayorista;32;30-77606674-2;CABA
+C0130;Usina Coghlan;Mayorista;30;30-73003227-7;CABA
+C0131;Tostado Coghlan II;Mayorista;35;30-76653848-1;CABA
+C0132;Cafe Barracas;Mayorista;35;30-76936469-0;CABA
+C0133;El Almacen de Barracas II;Mayorista;35;30-72054479-1;CABA
+C0134;Bar Agronomia;Mayorista;35;30-78251349-6;CABA
+C0135;Coffee Lab Agronomia II;Mayorista;30;30-79745090-7;CABA
+C0136;Tostado Villa Urquiza;Mayorista;35;30-73166012-9;CABA
+C0137;Panaderia Villa Urquiza II;Mayorista;30;30-78795600-5;CABA
+C0138;El Almacen de Constitucion;Mayorista;30;30-73350678-9;CABA
+C0139;La Ventanita de Constitucion II;Mayorista;30;30-75804484-8;CABA
+C9001;CONSUMIDOR FINAL;Local;0;;CABA
+C9002;VENTA ONLINE;Ecommerce;0;;

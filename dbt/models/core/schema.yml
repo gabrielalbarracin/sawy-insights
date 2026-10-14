@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: dim_products
+    description: Maestro de productos vigente, con unidades base por unidad vendida.
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+
+  - name: dim_customers
+    description: Clientes con su canal de negocio.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: channel
+        data_tests: [not_null]
+
+  - name: fct_sales_lines
+    description: >
+      Hecho central (grano: renglón de comprobante). Producto resuelto (alias),
+      canal, volumen en unidades base, costo del mes y margen bruto.
+    columns:
+      - name: line_id
+        data_tests: [unique, not_null]
+      - name: product_id
+        description: Todo producto vendido tiene que existir en el maestro.
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_products')
+              field: product_id
+      - name: customer_id
+        data_tests:
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      - name: unit_cost
+        description: Sin costo no hay margen. Si falta, el build falla.
+        data_tests: [not_null]
+
+  - name: fct_expense_allocation
+    description: Gasto variable repartido a renglones de factura, por criterio de reparto.
+    columns:
+      - name: allocated_amount
+        data_tests: [not_null]
+
+  - name: fct_line_contribution
+    description: Renglón × criterio de reparto, con gastos variables y contribución.
+    data_tests:
+      - unique_combination:
+          columns: ["allocation_method", "line_id"]

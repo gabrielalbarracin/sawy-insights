@@ -1,0 +1,9 @@
+.env
+.git
+output
+dbt/target
+dbt/logs
+**/__pycache__
+.venv
+.pytest_cache
+.ruff_cache

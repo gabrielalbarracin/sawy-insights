@@ -1,0 +1,3 @@
+# Finales de línea LF siempre (evita problemas al construir la imagen desde Windows)
+* text=auto eol=lf
+*.png binary

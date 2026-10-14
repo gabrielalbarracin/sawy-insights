@@ -1,0 +1,1 @@
+{{ contribution_rollup(['channel']) }}

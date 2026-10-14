@@ -1,0 +1,140 @@
+# =============================================================================
+# Tostadero Ruta 9: configuración del cliente
+#
+# Este archivo es lo ÚNICO específico del cliente (además de los CSV en raw/).
+# Todo lo demás (modelo canónico, dbt, detectores, IA, dashboard) es genérico.
+# Para sumar un cliente nuevo: copiar esta carpeta, ajustar este YAML y correr.
+# =============================================================================
+
+client:
+  id: tostadero_ruta9
+  name: Tostadero Ruta 9
+  owner_name: Sofía
+  currency: ARS
+  base_unit: kg            # unidad física para medir volumen (kg, litros, unidades...)
+  business_context: >
+    Tostadero de café en Buenos Aires. Vende por cuatro canales: un distribuidor
+    (Granos del Sur), cafeterías, tienda online y el mostrador del local.
+    El flete a cafeterías y al distribuidor lo paga el tostadero y no se cobra.
+  # Lo que la dueña cree hoy (del mail de onboarding). La IA lo usa para
+  # confirmar o desmentir con datos, con tacto.
+  owner_beliefs:
+    - "El Blend Casa es lo que más vendemos y lo que más nos deja."
+    - "Granos del Sur nos pide precio pero mueve un volumen que nadie más mueve."
+    - "El online es poquito, casi un hobby."
+    - "Facturamos cada vez más y en la cuenta nunca hay nada."
+
+# -----------------------------------------------------------------------------
+# 1) MAPEO ESTRUCTURAL: cómo leer los archivos del ERP → modelo canónico
+#    canonical_column: source_column
+# -----------------------------------------------------------------------------
+sources:
+  sales_lines:
+    file: raw/ventas.csv
+    format: {sep: ";", decimal: ".", encoding: utf-8, date_format: "%d/%m/%Y"}
+    columns:
+      sale_date: fecha
+      document_id: comprobante
+      document_type: tipo_comprobante
+      customer_id: codigo_cliente
+      product_id: codigo_producto
+      quantity: cantidad
+      unit_price: precio_unitario
+      discount_pct: bonificacion_pct
+      net_amount: importe
+      salesperson: vendedor
+    document_types: {FAC: invoice, NC: credit_note}
+    credit_note_sign: negative   # en este ERP las NC ya vienen en negativo
+
+  products:
+    file: raw/productos.csv
+    format: {sep: ";", decimal: ".", encoding: utf-8}
+    columns:
+      product_id: codigo
+      product_name: descripcion
+      unit_of_measure: unidad_medida
+      category: rubro
+      list_price: precio_lista_actual
+      is_active: activo
+    boolean_values: {S: true, N: false}
+
+  customers:
+    file: raw/clientes.csv
+    format: {sep: ";", decimal: ".", encoding: utf-8}
+    columns:
+      customer_id: codigo_cliente
+      customer_name: razon_social
+      segment: condicion_comercial
+      discount_pct: bonificacion_pct
+      tax_id: cuit
+      city: localidad
+
+  product_costs:
+    file: raw/costos.csv
+    format: {sep: ";", decimal: ".", encoding: utf-8, period_format: "%m/%Y"}
+    columns:
+      product_id: codigo_producto
+      period: periodo
+      unit_cost: costo_unitario
+      currency: moneda
+
+  expenses:
+    file: raw/gastos_operativos.csv
+    format: {sep: ";", decimal: ".", encoding: utf-8, period_format: "%m/%Y"}
+    columns:
+      period: periodo
+      concept: concepto
+      amount: importe
+      notes: notas
+
+# -----------------------------------------------------------------------------
+# 2) REGLAS DE NEGOCIO: lo que el dato no dice y hay que saber del cliente
+# -----------------------------------------------------------------------------
+rules:
+  # Códigos viejos que quedaron de la migración de sistema → código vigente
+  product_aliases:
+    BLEND1K: CAF-BLEND-1K
+
+  # Cuántas unidades base (kg) tiene 1 unidad vendida. Sin entrada = 0 (no es café)
+  base_units_per_unit:
+    CAF-BLEND-1K: 1
+    CAF-BLEND-250: 0.25
+    CAF-BLEND-CJ6: 6
+    CAF-BRAS-1K: 1
+    CAF-BRAS-250: 0.25
+    CAF-ETIOP-250: 0.25
+    CAF-COLOM-250: 0.25
+    CAF-DESCA-250: 0.25
+
+  # Segmento del ERP → canal de negocio.
+  # named_customers=false: el "cliente" es un agregado (mostrador, online),
+  # no tiene sentido analizarlo como cliente individual.
+  channels:
+    - {segment: Distribuidor, channel: Distribuidor, named_customers: true}
+    - {segment: Mayorista,    channel: Cafeterías,   named_customers: true}
+    - {segment: Local,        channel: Mostrador,    named_customers: false}
+    - {segment: Ecommerce,    channel: Online,       named_customers: false}
+
+  # Cómo se comporta cada gasto.
+  #  behavior: variable → se reparte a las ventas de los canales indicados
+  #            fixed    → estructura; no se reparte (se resta a nivel empresa)
+  #  driver:   base_units (kg) | net_amount ($ facturado) | deliveries (entregas)
+  #  label:    cómo se lo nombra en lenguaje simple
+  #  sensitive: true → el driver es un supuesto discutible; se calcula con
+  #             TODOS los criterios para mostrar la sensibilidad
+  # Conceptos que no figuren acá se tratan como fijos (y se avisa).
+  expenses:
+    - {concept: Flete distribucion, label: el flete, behavior: variable, channels: [Distribuidor, Cafeterías], driver: base_units, sensitive: true}
+    - {concept: Packaging mayorista, label: el packaging, behavior: variable, channels: [Distribuidor, Cafeterías], driver: base_units, sensitive: false}
+    - {concept: Comision plataforma ecommerce, label: la comisión de la tienda online, behavior: variable, channels: [Online],                   driver: net_amount, sensitive: false}
+    - {concept: Alquiler y expensas local,     behavior: fixed}
+    - {concept: Sueldos produccion,            behavior: fixed}
+    - {concept: Sueldos administracion,        behavior: fixed}
+    - {concept: Energia y gas tostadero,       behavior: fixed}
+
+# -----------------------------------------------------------------------------
+# 3) ANÁLISIS: parámetros de los detectores (todos tienen default en el código)
+# -----------------------------------------------------------------------------
+analysis:
+  allocation_methods: [base_units, net_amount, deliveries]
+  default_allocation_method: base_units
