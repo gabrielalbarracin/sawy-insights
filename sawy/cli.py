@@ -7,13 +7,13 @@ serve   sirve el dashboard en http://localhost:8000
 from __future__ import annotations
 
 import argparse
-import functools
 import http.server
 import logging
 import os
 import shutil
 import sys
 import time
+from pathlib import Path
 
 from sawy.config import ROOT, load_client
 
@@ -71,12 +71,46 @@ def build(client_id: str, refresh_ai: bool, publish: bool) -> None:
     log.info("Listo en %.1fs → %s", time.time() - t0, out)
 
 
-def serve(client_id: str, port: int) -> None:
+def make_handler(index_path: Path) -> type[http.server.BaseHTTPRequestHandler]:
+    """Handler que sirve SOLO el dashboard.
+
+    La carpeta de salida también tiene el warehouse (warehouse.duckdb) e
+    insights.json, con todas las ventas, clientes y CUITs. Un servidor de
+    archivos genérico los dejaría descargables; acá cualquier otra ruta es 404.
+    """
+
+    class DashboardHandler(http.server.BaseHTTPRequestHandler):
+        server_version = "sawy"
+        sys_version = ""
+
+        def do_GET(self) -> None:  # noqa: N802 (nombre impuesto por http.server)
+            if self.path.split("?", 1)[0] not in ("/", "/index.html"):
+                self.send_error(404)
+                return
+            body = index_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.write(body)
+
+        def do_HEAD(self) -> None:  # noqa: N802
+            self.do_GET()
+
+        def log_message(self, fmt: str, *args: object) -> None:
+            log.info("%s %s", self.address_string(), fmt % args)
+
+    return DashboardHandler
+
+
+def serve(client_id: str, port: int, host: str) -> None:
     cfg = load_client(client_id)
-    if not (cfg.output_dir / "index.html").exists():
+    index = cfg.output_dir / "index.html"
+    if not index.exists():
         sys.exit("Primero corré: python -m sawy build")
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(cfg.output_dir))
-    with http.server.ThreadingHTTPServer(("0.0.0.0", port), handler) as httpd:
+    with http.server.ThreadingHTTPServer((host, port), make_handler(index)) as httpd:
         log.info("Dashboard en http://localhost:%s  (Ctrl+C para salir)", port)
         httpd.serve_forever()
 
@@ -93,12 +127,15 @@ def main(argv: list[str] | None = None) -> None:
     s = sub.add_parser("serve", help="Sirve el dashboard")
     s.add_argument("--client", default=os.getenv("SAWY_CLIENT", "tostadero_ruta9"))
     s.add_argument("--port", type=int, default=int(os.getenv("PORT", "8000")))
+    # Por defecto solo accesible desde esta máquina. En Docker se usa 0.0.0.0
+    # dentro del contenedor y el puerto se publica solo en 127.0.0.1 del host.
+    s.add_argument("--host", default=os.getenv("SAWY_HOST", "127.0.0.1"))
     args = p.parse_args(argv)
     try:
         if args.cmd == "build":
             build(args.client, args.refresh_ai, args.publish)
         else:
-            serve(args.client, args.port)
+            serve(args.client, args.port, args.host)
     except Exception as exc:  # mensaje claro para quien no es técnico
         log.error("ERROR: %s", exc)
         if os.getenv("SAWY_DEBUG"):

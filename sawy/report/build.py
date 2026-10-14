@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timedelta, timezone
+from html import escape
 from pathlib import Path
 
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2 import Environment, FileSystemLoader
 
 from sawy.ai.guardrails import globalize, render
 from sawy.ai.narrator import NarrativeResult
@@ -88,7 +89,7 @@ def charts_html(ctx: Context) -> dict:
 
     def tip(name_key: str):
         return lambda r: [
-            f"<b>{r[name_key]}</b>",
+            f"<b>{escape(str(r[name_key]))}</b>",  # viene del ERP: se escapa
             f"Deja: <b>{money(r['contribution'])}</b> ({pct(r['contribution_margin_pct'] or 0)} de lo vendido)",
             f"Facturación: {money(r['revenue'])}",
             f"Margen bruto: {money(r['gross_margin'])}",
@@ -188,7 +189,10 @@ def build(
         "template": "Textos generados sin IA (plantilla)",
     }[narrative.source]
 
-    env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["html"]))
+    # autoescape SIEMPRE activo: select_autoescape(["html"]) no matchea ".html.j2" y
+    # dejaba sin escapar nombres del ERP y textos de la IA. Los gráficos (HTML ya
+    # escapado en charts.py) son lo único que entra con |safe.
+    env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=True)
     html = env.get_template("dashboard.html.j2").render(
         client=cfg.client,
         period=period,

@@ -44,6 +44,12 @@ def axis_money(v: float) -> str:
 
 
 def _tip(lines: list[str]) -> str:
+    """Tooltip como atributo HTML.
+
+    Las líneas son HTML de confianza (<b>, <br>): todo dato externo (nombres de
+    clientes o productos del ERP) tiene que llegar YA escapado, porque el
+    navegador decodifica el atributo y el tooltip lo inserta como HTML.
+    """
     return escape("<br>".join(lines), quote=True)
 
 
